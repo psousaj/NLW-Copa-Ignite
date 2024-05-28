@@ -1,59 +1,70 @@
-import Fastify from 'fastify'
-import cors from '@fastify/cors'
-import { PrismaClient } from '@prisma/client'
-import * as z from 'zod'
-import ShortUniqueId from 'short-unique-id'
+import Fastify from "fastify"
+import cors from "@fastify/cors"
+import jwt from "@fastify/jwt"
+import fastifySwagger from '@fastify/swagger';
+import fastifySwaggerUi from '@fastify/swagger-ui'
+import fastifyAutoload from "@fastify/autoload"
 
-const prisma = new PrismaClient({ log: ['query'] })
+import { poolRoutes } from "@/routes/pool"
+import { authRoutes } from "@/routes/auth"
+import { gameRoutes } from "@/routes/game"
+import { guessRoutes } from "@/routes/guess"
+import { userRoutes } from "@/routes/user"
+import path from "path";
+import fastify from "fastify";
 
 async function bootstrap() {
-    const fastify = Fastify({
-        logger: false
-    })
+  const fastify = Fastify()
 
-    await fastify.register(cors, {
-        origin: true
-    })
+  await fastify.register(cors, {
+    origin: true,
+  })
 
-    fastify.get('/pools/count', async () => {
-        const count = await prisma.pool.count()
+  await fastify.register(fastifySwagger, {
+    openapi: {
+      info: {
+        title: 'NLW Copa API',
+        description: 'NLW Copa API Documentation',
+        version: '1.0.0'
+      },
+      servers: [
+        {
+          url: 'http://localhost:3333'
+        }
+      ],
+    }
+  });
 
-        return { count }
-    })
-    fastify.get('/users/count', async () => {
-        const count = await prisma.user.count()
+  fastify.register(fastifyAutoload, {
+    dir: path.join(__dirname, 'routes')
+  })
 
-        return { count }
-    })
-    fastify.get('/guesses/count', async () => {
-        const count = await prisma.user.count()
+  await fastify.register(fastifySwaggerUi, {
+    routePrefix: '/docs',
+    uiConfig: {
+      docExpansion: 'list',
+      deepLinking: true
+    },
+    // staticCSP: true,
+  })
 
-        return { count }
-    })
 
+  await fastify.register(jwt, {
+    secret: process.env.JWT_SECRET || 'nlwcopa',
+  })
 
-    fastify.post('/pools', async (request, repply) => {
-        const createPoolBody = z.object({
-            title: z.string()
-        })
+  await fastify.register(poolRoutes)
+  await fastify.register(authRoutes)
+  await fastify.register(gameRoutes)
+  await fastify.register(guessRoutes)
+  await fastify.register(userRoutes)
 
-        const { title } = createPoolBody.parse(request.body)
+  await fastify.listen({ port: 3333, host: '0.0.0.0' })
+  console.log('Server is running on port 3333 🚀')
 
-        const generate = new ShortUniqueId({ length: 6 })
-        const code = String(generate.rnd()).toUpperCase()
-
-        await prisma.pool.create({
-            data: {
-                title: title,
-                code
-            }
-        })
-
-        return repply.status(201).send({ code })
-    })
-
-    await fastify.listen({ port: 3333, host: '0.0.0.0' })
-    console.log('Server running on port 3333 🚀')
+  fastify.ready().then(() => {
+    fastify.swagger();
+  });
 }
 
 bootstrap()
