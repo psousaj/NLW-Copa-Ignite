@@ -30,9 +30,9 @@ export function AuthContextProvider({ children }) {
 
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    clientId: process.env.CLIENT_ID,
-    expoClientId: process.env.EXPO_CLIENT_ID,
-    redirectUri: AuthSessions.makeRedirectUri({ useProxy: true }),
+    androidClientId: process.env.CLIENT_ID,
+    // redirectUri: AuthSessions.makeRedirectUri({ useProxy: true }),
+    redirectUri: AuthSessions.makeRedirectUri(),
     scopes: ['profile', 'email'],
   });
 

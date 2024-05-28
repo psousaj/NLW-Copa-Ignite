@@ -16,13 +16,13 @@ export default function App() {
   return (
     <NativeBaseProvider theme={THEME}>
       <AuthContextProvider>
-        <StatusBar 
+        <StatusBar
           barStyle='light-content'
           backgroundColor="transparent"
           translucent
-          />
+        />
         {fontsLoaded ? <Routes /> : <Loading />}
       </AuthContextProvider>
-    </NativeBaseProvider>
-  );
+    </NativeBaseProvider>  
+  )
 }

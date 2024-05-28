@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "nlwcopamobile",
-    "slug": "nlwcopamobile",
-    "scheme": "nlwcopamobile",
+    "name": "bolaodozezao",
+    "slug": "bolaodozezao",
+    "scheme": "bolaodozezao",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,28 +12,19 @@
       "resizeMode": "cover",
       "backgroundColor": "#000"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.bolaodozezao.mobile"
+      "package": "com.bolaodozezao"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "e7732fc4-f98e-4558-9612-ee3b3a343526"
+        "projectId": "6149e860-0aee-4869-8eab-7863efacaeed"
       }
     }
   }
