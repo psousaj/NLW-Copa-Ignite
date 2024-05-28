@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import Fastify from "fastify"
 import cors from "@fastify/cors"
 import jwt from "@fastify/jwt"
